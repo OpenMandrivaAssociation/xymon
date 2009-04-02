@@ -1,5 +1,5 @@
 #define beta %{nil}
-%define release %mkrel 1
+%define release %mkrel 2
 %define oldname hobbit
 %define _localstatedir %{_var}/lib
 %{?!_logdir:%global _logdir /var/log}
@@ -17,6 +17,7 @@ Source: http://downloads.sourceforge.net/hobbitmon/%{name}-%{version}%{?beta:-RC
 Patch:	hobbit-4.1.2-ignore-cdrom.patch
 Patch1:	hobbit-4.1.2-fix-apache-alias.patch
 Patch2:	hobbit-4.1.2p1-client-send-msgs.patch
+Patch3: xymon-4.2.3-devmon-multi-DS.patch
 Patch8: hobbit-4.2.0-increase-nk-priorities.patch
 #Source1: do_devmon.c
 # From devmon extras/devmon-graph.cfg
@@ -61,6 +62,7 @@ processes that must be running etc.
 %patch -p1
 %patch1 -p1
 #cp %{SOURCE1} hobbitd/rrd/
+%patch3 -p1 -b .devmon
 %patch8 -p1
 #%patch2 -p1
 # test should really check for RC -ne 127 (file not found), 1 is also acceptable
