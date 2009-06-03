@@ -1,5 +1,5 @@
 #define beta %{nil}
-%define release %mkrel 2
+%define release %mkrel 3
 %define oldname hobbit
 %define _localstatedir %{_var}/lib
 %{?!_logdir:%global _logdir /var/log}
@@ -135,6 +135,7 @@ mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d
 mv %{buildroot}/%{_sysconfdir}/%{name}/%{oldname}-apache.conf %{buildroot}/%{_sysconfdir}/httpd/conf.d/
 mkdir -p %{buildroot}/%{_sysconfdir}/logrotate.d
 install -m644 rpm/%{oldname}.logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
+perl -pi -e 's/%{oldname}/%{name}/g' %{buildroot}/%{_sysconfdir}/logrotate.d/%{name}
 
 install -d %{buildroot}/%{_datadir}/%{name}/www
 mv %{buildroot}%{_localstatedir}/%{name}/www/{gifs,help} %{buildroot}/%{_datadir}/%{name}/www
