@@ -103,7 +103,7 @@ USEHOBBITPING=n
 %else
 ./configure --client
 %endif
-#%configure --server
+#configure --server
 
 perl -pi -e 's/ch(own|grp)/echo chown/g' web/Makefile
 PKGBUILD=1 make
