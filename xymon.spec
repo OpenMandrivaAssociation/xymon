@@ -19,6 +19,7 @@ Patch1:	hobbit-4.1.2-fix-apache-alias.patch
 Patch2:	hobbit-4.1.2p1-client-send-msgs.patch
 Patch3: xymon-4.2.3-devmon-multi-DS.patch
 Patch8: hobbit-4.2.0-increase-nk-priorities.patch
+Patch9: xymon-4.2-fix-graph-zoom-konq-firefox35.path
 #Source1: do_devmon.c
 # From devmon extras/devmon-graph.cfg
 Source2: devmon-graph.cfg
@@ -64,6 +65,7 @@ processes that must be running etc.
 #cp %{SOURCE1} hobbitd/rrd/
 %patch3 -p1 -b .devmon
 %patch8 -p1
+%patch9 -p0 -b .fixgraphzoom
 #%patch2 -p1
 # test should really check for RC -ne 127 (file not found), 1 is also acceptable
 perl -pi -e 's/-eq 0/-ne 127/g' build/fping.sh
