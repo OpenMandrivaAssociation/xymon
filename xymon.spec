@@ -1,5 +1,5 @@
 #define beta %{nil}
-%define release %mkrel 5
+%define release %mkrel 6
 %define oldname hobbit
 %define _localstatedir %{_var}/lib
 %{?!_logdir:%global _logdir /var/log}
@@ -18,8 +18,12 @@ Patch:	hobbit-4.1.2-ignore-cdrom.patch
 Patch1:	hobbit-4.1.2-fix-apache-alias.patch
 Patch2:	hobbit-4.1.2p1-client-send-msgs.patch
 Patch3: xymon-4.2.3-devmon-multi-DS.patch
+Patch4: xymon-4.2.3-devmon-collector-fixes.patch
 Patch8: hobbit-4.2.0-increase-nk-priorities.patch
 Patch9: xymon-4.2-fix-graph-zoom-konq-firefox35.path
+Patch10: hobbit-perl-cl-1.21.patch
+Patch11: xymon-4.2.3-clientonly-fixlibrt-detection.patch
+Patch12: xymon-4.2.3-nkview-hffile.patch
 #Source1: do_devmon.c
 # From devmon extras/devmon-graph.cfg
 Source2: devmon-graph.cfg
@@ -37,6 +41,8 @@ BuildRequires: openssl-devel
 BuildRequires: pcre-devel
 BuildRequires: rrdtool-devel
 BuildRequires: openldap-devel
+%else
+%global _unpackaged_files_terminate_build 0
 %endif
 
 %description
@@ -64,8 +70,12 @@ processes that must be running etc.
 %patch1 -p1
 #cp %{SOURCE1} hobbitd/rrd/
 %patch3 -p1 -b .devmon
+%patch4 -p0 -b .devmonsvnr164
 %patch8 -p1
 %patch9 -p0 -b .fixgraphzoom
+%patch10 -p1 -b .hobbit-perl-cl
+%patch11 -p2
+%patch12 -p0
 #%patch2 -p1
 # test should really check for RC -ne 127 (file not found), 1 is also acceptable
 perl -pi -e 's/-eq 0/-ne 127/g' build/fping.sh
@@ -110,7 +120,7 @@ PKGBUILD=1 make
 
 %install
 rm -Rf %{buildroot}
-INSTALLROOT=%{buildroot}/ PKGBUILD=1 make install
+INSTALLROOT=%{buildroot}/ PKGBUILD=1 MANROOT=%{_mandir} make install
 mkdir -p %{buildroot}/%{_initrddir}
 which install
 install -m755 rpm/%{oldname}-client.init %{buildroot}/%{_initrddir}/%{name}-client
@@ -125,13 +135,15 @@ ln -s %{_localstatedir}/%{name}/tmp %{buildroot}/%{_libdir}/%{name}/tmp
 rmdir %{buildroot}/%{_libdir}/%{name}/client/logs
 perl -pi -e 's!^BBDISP=.*!include /var/run/%{name}client-runtime.cfg!;s/^BBDISPLAYS=.*$//g' %{buildroot}/%{_libdir}/%{name}/client%{_sysconfdir}/%{oldname}client.cfg
 
+
+mkdir -p %{buildroot}/%{_sysconfdir}/%{name}/hobbitlaunch.d
+# server-only stuff
+%if %{?!_without_server:1}%{?_without_server:0}
 echo "directory %{_sysconfdir}/%{name}/hobbitlaunch.d" >> %{buildroot}/%{_sysconfdir}/%{name}/hobbitlaunch.cfg
 echo "directory %{_sysconfdir}/%{name}/hobbitgraph.d" >> %{buildroot}/%{_sysconfdir}/%{name}/hobbitgraph.cfg
 mkdir -p %{buildroot}/%{_sysconfdir}/%{name}/{hobbitlaunch,hobbitgraph,clientlaunch}.d
 install -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/%{name}/hobbitgraph.d/devmon.cfg
 
-# server-only stuff
-%if %{?!_without_server:1}%{?_without_server:0}
 install -m755 rpm/%{oldname}-init.d %{buildroot}/%{_initrddir}/%{name}
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d
 mv %{buildroot}/%{_sysconfdir}/%{name}/%{oldname}-apache.conf %{buildroot}/%{_sysconfdir}/httpd/conf.d/
@@ -147,6 +159,7 @@ touch %{buildroot}/%{_sysconfdir}/%{name}/%{name}-nkview.cfg.bak
 # end of server-only stuff
 %else
 # extra stuff to do in client-only build
+INSTALLROOT=%{buildroot}/ MANROOT=%{_mandir} PKGBUILD=1 make install-man
 install -d %{buildroot}/%{_sysconfdir}/%{name}
 install -d %{buildroot}/%{_logdir}/%{name}
 rm -f %{buildroot}/%{_bindir}/bb*
@@ -211,12 +224,17 @@ else
 fi
 gpasswd -a %{name} adm
 
+%if %{?!_without_server:1}%{?_without_server:0}
 %post
 if [ $1 == 1 ]
 then /etc/init.d/httpd reload
 fi
 %_post_service %{name}
 /sbin/chkconfig --list %{name}-client |grep -q on && /sbin/chkconfig %{name}-client off ||:
+
+%preun
+%_preun_service %{name}
+%endif
 
 %post client
 # if no server is installed, start the client via init script
@@ -226,9 +244,6 @@ echo "server package installed, not starting client at boot"
 else
 %_post_service %{name}-client
 fi
-
-%preun
-%_preun_service %{name}
 
 %preun client
 %_preun_service %{name}-client
