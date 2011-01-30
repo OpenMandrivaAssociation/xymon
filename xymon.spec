@@ -1,5 +1,5 @@
 #define beta %{nil}
-%define release %mkrel 6
+%define release %mkrel 7
 %define oldname hobbit
 %define _localstatedir %{_var}/lib
 %{?!_logdir:%global _logdir /var/log}
@@ -75,7 +75,7 @@ processes that must be running etc.
 %patch9 -p0 -b .fixgraphzoom
 %patch10 -p1 -b .hobbit-perl-cl
 %patch11 -p2
-%patch12 -p0
+%patch12 -p1 -b .nkviewtheme
 #%patch2 -p1
 # test should really check for RC -ne 127 (file not found), 1 is also acceptable
 perl -pi -e 's/-eq 0/-ne 127/g' build/fping.sh
