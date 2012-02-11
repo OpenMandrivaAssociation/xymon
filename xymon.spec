@@ -1,5 +1,5 @@
 #define beta %{nil}
-%define release %mkrel 8
+%define release %mkrel 9
 %define oldname hobbit
 %define _localstatedir %{_var}/lib
 %{?!_logdir:%global _logdir /var/log}
