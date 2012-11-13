@@ -1,0 +1,22 @@
+--- hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-apache-secure.DIST~	2005-03-10 23:01:56.000000000 +0100
++++ hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-apache-secure.DIST	2005-12-20 10:08:24.000000000 +0100
+@@ -11,7 +11,7 @@
+ #
+ #          DocumentRoot @INSTALLWWWDIR@
+ 
+-Alias @BBHOSTURL@/  "@INSTALLWWWDIR@/"
++Alias @BBHOSTURL@  "@INSTALLWWWDIR@/"
+ <Directory "@INSTALLWWWDIR@">
+     Options Indexes FollowSymLinks Includes MultiViews
+     Order allow,deny
+--- hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-apache-open.DIST~	2005-03-10 23:01:37.000000000 +0100
++++ hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-apache-open.DIST	2005-12-20 10:08:57.000000000 +0100
+@@ -11,7 +11,7 @@
+ #
+ #          DocumentRoot @INSTALLWWWDIR@
+ 
+-Alias @BBHOSTURL@/  "@INSTALLWWWDIR@/"
++Alias @BBHOSTURL@  "@INSTALLWWWDIR@/"
+ <Directory "@INSTALLWWWDIR@">
+     Options Indexes FollowSymLinks Includes MultiViews
+     Order allow,deny

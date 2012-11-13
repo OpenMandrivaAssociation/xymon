@@ -1,0 +1,12 @@
+diff -p -up xymon-4.2.3/hobbitd/rrd/do_devmon.c~ xymon-4.2.3/hobbitd/rrd/do_devmon.c
+--- xymon-4.2.3/hobbitd/rrd/do_devmon.c~	2008-12-01 13:53:04.000000000 +0200
++++ xymon-4.2.3/hobbitd/rrd/do_devmon.c	2009-04-02 10:40:14.000000000 +0200
+@@ -70,7 +70,7 @@ int do_devmon_rrd(char *hostname, char *
+ 			devmon_params[numds+5] = rra4;
+ 			devmon_params[numds+6] = NULL;
+ 
+-			if (devmon_tpl == NULL) devmon_tpl = setup_template(devmon_params);
++			devmon_tpl = setup_template(devmon_params);
+ 			goto nextline;
+ 		}
+ 

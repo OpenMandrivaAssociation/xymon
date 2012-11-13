@@ -1,0 +1,878 @@
+diff --exclude=.svn -r -U5 -N xymon-4.2.3/hobbitd/etcfiles/hobbitgraph.cfg xymon-4.2.3-hobbitpatch/hobbitd/etcfiles/hobbitgraph.cfg
+--- xymon-4.2.3/hobbitd/etcfiles/hobbitgraph.cfg	2009-06-27 13:35:39.000000000 +0200
++++ xymon-4.2.3-hobbitpatch/hobbitd/etcfiles/hobbitgraph.cfg	2009-06-30 15:29:03.000000000 +0200
+@@ -1306,10 +1306,88 @@
+ 	-l 0
+ 	GPRINT:p@RRDIDX@:LAST: \: %5.1lf (cur)
+ 	GPRINT:p@RRDIDX@:MAX: \: %5.1lf (max)
+ 	GPRINT:p@RRDIDX@:MIN: \: %5.1lf (min)
+ 	GPRINT:p@RRDIDX@:AVERAGE: \: %5.1lf (avg)\n
++[xstatdisk]
++        FNPATTERN ^xstatdisk,(.+).rrd
++        TITLE Disk busy %
++        YAXIS %busy
++        -r
++        -u 100
++        DEF:busy@RRDIDX@=@RRDFN@:disk_busy:AVERAGE
++        LINE1:busy@RRDIDX@#@COLOR@:@RRDPARAM@ Disk busy %
++        GPRINT:busy@RRDIDX@:LAST: \: %5.1lf (cur)
++        GPRINT:busy@RRDIDX@:MAX: \: %5.1lf (max)
++        GPRINT:busy@RRDIDX@:MIN: \: %5.1lf (min)
++        GPRINT:busy@RRDIDX@:AVERAGE: \: %5.1lf (avg)\n
++[xstatqtree]
++        FNPATTERN ^xstatqtree,(.+).rrd
++        TITLE Qtree Operations (Total)
++        YAXIS ops/second
++        DEF:nfs_ops@RRDIDX@=@RRDFN@:nfs_ops:AVERAGE
++        DEF:cifs_ops@RRDIDX@=@RRDFN@:cifs_ops:AVERAGE
++        CDEF:tot_ops@RRDIDX@=nfs_ops@RRDIDX@,cifs_ops@RRDIDX@,+
++        LINE2:tot_ops@RRDIDX@#@COLOR@:@RRDPARAM@ ops
++        GPRINT:tot_ops@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:tot_ops@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:tot_ops@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:tot_ops@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++[xstatvolume]
++        FNPATTERN ^xstatvolume,(.+).rrd
++        TITLE Volume Data Statistics
++        YAXIS Bytes/second
++        -b 1024
++        -r
++        DEF:in@RRDIDX@=@RRDFN@:read_data:AVERAGE
++        DEF:out@RRDIDX@=@RRDFN@:write_data:AVERAGE
++        LINE1:in@RRDIDX@#@COLOR@:@RRDPARAM@  read
++        GPRINT:in@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:in@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:in@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:in@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++        LINE1:out@RRDIDX@#@COLOR@:@RRDPARAM@ write
++        GPRINT:out@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:out@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:out@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:out@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++[xstatlun]
++        FNPATTERN ^xstatlun,(.+).rrd
++        TITLE Lun Data Statistics
++        YAXIS Bytes/second
++        -b 1024
++        -r
++        DEF:in@RRDIDX@=@RRDFN@:read_data:AVERAGE
++        DEF:out@RRDIDX@=@RRDFN@:write_data:AVERAGE
++        LINE1:in@RRDIDX@#@COLOR@:@RRDPARAM@  read
++        GPRINT:in@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:in@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:in@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:in@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++        LINE1:out@RRDIDX@#@COLOR@:@RRDPARAM@ write
++        GPRINT:out@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:out@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:out@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:out@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++[xstatifnet]
++        FNPATTERN ^xstatifnet,(.+).rrd
++        TITLE Network Traffic
++        YAXIS Bytes/second
++        -b 1024
++        -r
++        DEF:in@RRDIDX@=@RRDFN@:recv_data:AVERAGE
++        DEF:out@RRDIDX@=@RRDFN@:send_data:AVERAGE
++        LINE1:in@RRDIDX@#@COLOR@:@RRDPARAM@  inbound
++        GPRINT:in@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:in@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:in@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:in@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
++        LINE1:out@RRDIDX@#@COLOR@:@RRDPARAM@ outbound
++        GPRINT:out@RRDIDX@:LAST: \: %8.1lf%s (cur)
++        GPRINT:out@RRDIDX@:MAX: \: %8.1lf%s (max)
++        GPRINT:out@RRDIDX@:MIN: \: %8.1lf%s (min)
++        GPRINT:out@RRDIDX@:AVERAGE: \: %8.1lf%s (avg)\n
+ [JVM]
+ 	FNPATTERN ^JVM.rrd
+ 	TITLE BEA/Weblogic JVM Heap Memory
+ 	YAXIS Memory
+ 	DEF:free=JVM.rrd:HeapFreeCurrent:AVERAGE
+diff --exclude=.svn -r -U5 -N xymon-4.2.3/hobbitd/rrd/do_beastat.c xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_beastat.c
+--- xymon-4.2.3/hobbitd/rrd/do_beastat.c	2009-06-27 13:35:39.000000000 +0200
++++ xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_beastat.c	2009-06-30 00:49:57.000000000 +0200
+@@ -25,19 +25,16 @@
+ 					"DS:TransRBack:DERIVE:600:0:U",
+ 					"DS:TransTotCount:DERIVE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *beastat_jta_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	unsigned long heapfree=0, heapsize=0;
+ 	unsigned long acttrans=0, secact=0, trab=0, trcomm=0, trheur=0, totot=0;
+ 	unsigned long trrbapp=0, trrbres=0, trrbsys=0, trrbto=0, trrb=0, trtot=0;
+-	time_t now = time(NULL);
+ 	
+ 	dbgprintf("beastat: host %s test %s\n",hostname, testname);
+ 
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "beastat.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (beastat_jta_tpl == NULL) beastat_jta_tpl = setup_template(beastat_jta_params);
+ 		acttrans=get_long_data(msg,"ActiveTransactionsTotalCount");
+ 		secact=get_long_data(msg,"SecondsActiveTotalCount");
+@@ -71,17 +68,14 @@
+                                      "DS:HeapFreeCurrent:GAUGE:600:0:U",
+                                      "DS:HeapSizeCurrent:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *beastat_jvm_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	unsigned long heapfree=0, heapsize=0;
+-	time_t now = time(NULL);
+ 	
+ 	dbgprintf("beastat: host %s test %s\n",hostname, testname);
+ 
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "beastat.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (beastat_jvm_tpl == NULL) beastat_jvm_tpl = setup_template(beastat_jvm_params);
+ 		heapfree=get_long_data(msg, "HeapFreeCurrent");
+ 		heapsize=get_long_data(msg,"HeapSizeCurrent");
+@@ -105,17 +99,14 @@
+                                      "DS:HighJMSSrv:GAUGE:600:0:U",
+                                      "DS:TotalJMSSrv:DERIVE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *beastat_jms_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+         unsigned long conncurr=0, connhigh=0, conntotal=0, jmscurr=0, jmshigh=0, jmstotal=0;
+-	time_t now = time(NULL);
+ 	
+ 	dbgprintf("beastat: host %s test %s\n",hostname, testname);
+ 
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "beastat.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (beastat_jms_tpl == NULL) beastat_jms_tpl = setup_template(beastat_jms_params);
+ 		conncurr=get_long_data(msg, "ConnectionsCurrentCount");
+ 		connhigh=get_long_data(msg,"ConnectionsHighCount");
+@@ -145,15 +136,12 @@
+ static char *beastat_exec_tpl		= NULL;
+ static char *checktest			= "Type=ExecuteQueueRuntime";
+ 
+ 	char *curline;
+ 	char *eoln;		
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	dbgprintf("beastat: host %s test %s\n",hostname, testname);
+ 
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "beastat.pl")) {
+ 		if (beastat_exec_tpl == NULL) beastat_exec_tpl = setup_template(beastat_exec_params);
+ /*
+ ---- Full Status Report ----
+ 	Type=ExecuteQueueRuntime - Location=admin - Name=weblogic.kernel.System
+@@ -221,15 +209,12 @@
+ static char *beastat_jdbc_tpl		= NULL;
+ static char *checktest			= "Type=JDBCConnectionPoolRuntime";
+ 
+ 	char *curline;
+ 	char *eoln;		
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	dbgprintf("beastat: host %s test %s\n",hostname, testname);
+ 
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "beastat.pl")) {
+ 		if (beastat_jdbc_tpl == NULL) beastat_jdbc_tpl = setup_template(beastat_jdbc_params);
+ /*
+ ---- Full Status Report ----
+ 	Type=ExecuteQueueRuntime - Location=admin - Name=weblogic.kernel.System
+diff --exclude=.svn -r -U5 -N xymon-4.2.3/hobbitd/rrd/do_dbcheck.c xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_dbcheck.c
+--- xymon-4.2.3/hobbitd/rrd/do_dbcheck.c	2009-06-27 13:35:39.000000000 +0200
++++ xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_dbcheck.c	2009-06-30 01:11:35.000000000 +0200
+@@ -23,14 +23,11 @@
+ static char *dbcheck_memreq_tpl      = NULL;
+ 
+ 	unsigned long free=0,used=0,reqf=0,fsz=0;	
+ 	double avfr=0,avus=0;
+ 	char *start,*end;
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	dbgprintf("dbcheck: host %s test %s\n",hostname, testname);
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "dbcheck.pl")) {
+ 		if (dbcheck_memreq_tpl == NULL) dbcheck_memreq_tpl = setup_template(dbcheck_memreq_params);
+                 if ((start=strstr(msg, "<!--"))==NULL) return 0;
+                 if ((end=strstr(start,"-->"))==NULL) return 0;
+ 		*end='\0';
+@@ -69,16 +66,13 @@
+                                      "DS:BlBuffHit:GAUGE:600:0:100",
+                                      "DS:RowCache:GAUGE:600:0:100",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *dbcheck_hitcache_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	double pinsql=0, pintbl=0, pinbody=0, pintrig=0, hitsql=0, hittbl=0, hitbody=0, hittrig=0, blbuff=0, rowchache=0;
+-	time_t now = time(NULL);
+ 	dbgprintf("dbcheck: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "dbcheck.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (dbcheck_hitcache_tpl == NULL) dbcheck_hitcache_tpl = setup_template(dbcheck_hitcache_params);
+ 		pinsql=get_double_data(msg,"PinSQLArea");
+ 		pintbl=get_double_data(msg,"PinTblProc");
+@@ -116,17 +110,14 @@
+                                      "DS:CurrProcs:GAUGE:600:0:U",
+                                      "DS:ProcsUsedPct:GAUGE:600:0:100",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *dbcheck_session_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+         unsigned long maxsess=0, currsess=0, maxproc=0, currproc=0 ;
+ 	double pctsess=0, pctproc=0;
+-	time_t now = time(NULL);
+ 	dbgprintf("dbcheck: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "dbcheck.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (dbcheck_session_tpl == NULL) dbcheck_session_tpl = setup_template(dbcheck_session_params);
+ 		maxsess=get_long_data(msg, "MaxSession");
+ 		currsess=get_long_data(msg,"CurrSession");
+@@ -153,15 +144,12 @@
+                                         rra1, rra2, rra3, rra4, NULL };
+ static char *dbcheck_rb_tpl    = NULL;
+ 
+         char *curline;
+         char *eoln;
+-        static time_t starttime = 0;
+-        time_t now = time(NULL);
+         dbgprintf("dbcheck: host %s test %s\n",hostname, testname);
+ 
+-        if (starttime == 0) starttime = now;
+         if (strstr(msg, "dbcheck.pl")) {
+                 if (dbcheck_rb_tpl == NULL) dbcheck_rb_tpl = setup_template(dbcheck_rb_params);
+                 curline=strstr(msg, "Rollback Checking");
+                 if (curline) {
+                         eoln = strchr(curline, '\n');
+@@ -201,15 +189,12 @@
+ static char *dbcheck_invobj_tpl    = NULL;
+ 
+         char *curline;
+         char *eoln;
+ 	unsigned long yellow=0,red=0,green=0;
+-        static time_t starttime = 0;
+-        time_t now = time(NULL);
+         dbgprintf("dbcheck: host %s test %s\n",hostname, testname);
+ 
+-        if (starttime == 0) starttime = now;
+         if (strstr(msg, "dbcheck.pl")) {
+                 if (dbcheck_invobj_tpl == NULL) dbcheck_invobj_tpl = setup_template(dbcheck_invobj_params);
+                 curline=strstr(msg, "Invalid Object Checking");
+                 if (curline) {
+                         eoln = strchr(curline, '\n');
+@@ -234,5 +219,148 @@
+                         create_and_update_rrd(hostname, rrdfn, dbcheck_invobj_params, dbcheck_invobj_tpl);
+         }
+         return 0;
+ }
+ 
++int do_dbcheck_tablespace_rrd(char *hostname, char *testname, char *classname, char *pagepaths, char *msg, time_t tstamp)
++{
++       static char *tablespace_params[] = { "DS:pct:GAUGE:600:0:U", "DS:used:GAUGE:600:0:U", NULL };
++       static char *tablespace_tpl      = NULL;
++
++       char *eoln, *curline;
++       static int ptnsetup = 0;
++       static pcre *inclpattern = NULL;
++       static pcre *exclpattern = NULL;
++
++       if (tablespace_tpl == NULL) tablespace_tpl = setup_template(tablespace_params);
++
++       if (!ptnsetup) {
++               const char *errmsg;
++               int errofs;
++               char *ptn;
++
++               ptnsetup = 1;
++               ptn = getenv("RRDDISKS");
++               if (ptn && strlen(ptn)) {
++                       inclpattern = pcre_compile(ptn, PCRE_CASELESS, &errmsg, &errofs, NULL);
++                       if (!inclpattern) errprintf("PCRE compile of RRDDISKS='%s' failed, error %s, offset %d\n",
++                                                   ptn, errmsg, errofs);
++               }
++               ptn = getenv("NORRDDISKS");
++               if (ptn && strlen(ptn)) {
++                       exclpattern = pcre_compile(ptn, PCRE_CASELESS, &errmsg, &errofs, NULL);
++                       if (!exclpattern) errprintf("PCRE compile of NORRDDISKS='%s' failed, error %s, offset %d\n",
++                                                   ptn, errmsg, errofs);
++               }
++       }
++
++       /*
++        * Francesco Duranti noticed that if we use the "/group" option
++        * when sending the status message, this tricks the parser to
++        * create an extra filesystem called "/group". So skip the first
++        * line - we never have any disk reports there anyway.
++        */
++       curline = strchr(msg, '\n'); if (curline) curline++;
++       /* FD: For dbcheck.pl move after the Header */
++       curline=strstr(curline, "TableSpace/DBSpace");
++       if (curline) {
++               eoln = strchr(curline, '\n');
++               curline = (eoln ? (eoln+1) : NULL);
++       }
++
++       while (curline)  {
++               char *fsline, *p;
++               char *columns[20];
++               int columncount;
++               char *diskname = NULL;
++               int pused = -1;
++               int wanteddisk = 1;
++               long long aused = 0;
++               /* FD: Using double instead of long long because we can have decimal on Netapp and DbCheck */
++               double dused = 0;
++               /* FD: used to add a column if the filesystem is named "snap reserve" for netapp.pl */
++               int snapreserve=0;
++
++               eoln = strchr(curline, '\n'); if (eoln) *eoln = '\0';
++
++               /* FD: Exit if doing DBCHECK and the end of the tablespaces are reached */
++               if (strstr(eoln+1, "dbcheck.pl") == (eoln+1)) break;
++
++               /* red/yellow filesystems show up twice */
++               if (*curline == '&') goto nextline;
++               if ((strstr(curline, " red ") || strstr(curline, " yellow "))) goto nextline;
++
++               for (columncount=0; (columncount<20); columncount++) columns[columncount] = "";
++               fsline = xstrdup(curline); columncount = 0; p = strtok(fsline, " ");
++               while (p && (columncount < 20)) { columns[columncount++] = p; p = strtok(NULL, " "); }
++
++               /* FD: Check TableSpace from dbcheck.pl */
++               /* FD: Add an initial "/" to TblSpace Name so they're reported in the trends column */
++               diskname=xmalloc(strlen(columns[0])+2);
++               sprintf(diskname,"/%s",columns[0]);
++               p = strchr(columns[4], '%'); if (p) *p = ' ';
++               pused = atoi(columns[4]);
++               p = columns[2] + strspn(columns[2], "0123456789.");
++               /* FD: Using double instead of long long because we can have decimal */
++               dused = str2ll(columns[2], NULL);
++               /* FD: dbspace report contains M/G/T
++                  Convert to KB if there's a modifier after the numbers
++               */
++               if (*p == 'M') dused *= 1024;
++               else if (*p == 'G') dused *= (1024*1024);
++               else if (*p == 'T') dused *= (1024*1024*1024);
++               aused=(long long)dused;
++
++
++               /* Check include/exclude patterns */
++               wanteddisk = 1;
++               if (exclpattern) {
++                       int ovector[30];
++                       int result;
++
++                       result = pcre_exec(exclpattern, NULL, diskname, strlen(diskname),
++                                          0, 0, ovector, (sizeof(ovector)/sizeof(int)));
++
++                       wanteddisk = (result < 0);
++               }
++               if (wanteddisk && inclpattern) {
++                       int ovector[30];
++                       int result;
++
++                       result = pcre_exec(inclpattern, NULL, diskname, strlen(diskname),
++                                          0, 0, ovector, (sizeof(ovector)/sizeof(int)));
++
++                       wanteddisk = (result >= 0);
++               }
++
++               if (wanteddisk && diskname && (pused != -1)) {
++                       p = diskname; while ((p = strchr(p, '/')) != NULL) { *p = ','; }
++                       if (strcmp(diskname, ",") == 0) {
++                               diskname = xrealloc(diskname, 6);
++                               strcpy(diskname, ",root");
++                       }
++
++                       /*
++                        * Use testname here.
++                        * The disk-handler also gets data from NetAPP inode- and qtree-messages,
++                        * that are virtually identical to the disk-messages. So lets just handle
++                        * all of it by using the testname as part of the filename.
++                        */
++                        snprintf(rrdfn, sizeof(rrdfn)-1, "%s%s.rrd", testname, diskname);
++                        rrdfn[sizeof(rrdfn)-1] = '\0';
++                        sprintf(rrdvalues, "%d:%d:%lld", (int)tstamp, pused, aused);
++                        create_and_update_rrd(hostname, rrdfn, tablespace_params, tablespace_tpl);
++
++               }
++               if (diskname) { xfree(diskname); diskname = NULL; }
++
++               if (eoln) *eoln = '\n';
++               xfree(fsline);
++
++nextline:
++               curline = (eoln ? (eoln+1) : NULL);
++       }
++
++       return 0;
++}
++
++
+diff --exclude=.svn -r -U5 -N xymon-4.2.3/hobbitd/rrd/do_disk.c xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_disk.c
+--- xymon-4.2.3/hobbitd/rrd/do_disk.c	2009-06-27 13:35:39.000000000 +0200
++++ xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_disk.c	2009-06-30 01:17:45.000000000 +0200
+@@ -13,21 +13,24 @@
+ static char disk_rcsid[] = "$Id: do_disk.c,v 1.31 2006-06-09 22:23:49 henrik Exp $";
+ 
+ int do_disk_rrd(char *hostname, char *testname, char *msg, time_t tstamp)
+ {
+ 	static char *disk_params[] = { "rrdcreate", rrdfn, 
+-				       "DS:pct:GAUGE:600:0:U", /* Upper bound is U because TblSpace can grow >100 */
++				       "DS:pct:GAUGE:600:0:100", 
+ 				       "DS:used:GAUGE:600:0:U", 
+ 					rra1, rra2, rra3, rra4, NULL };
+ 	static char *disk_tpl      = NULL;
+ 
+-	enum { DT_IRIX, DT_AS400, DT_NT, DT_UNIX, DT_NETAPP, DT_NETAPP2, DT_NETWARE, DT_BBWIN, DT_DBCHECK } dsystype;
++	enum { DT_IRIX, DT_AS400, DT_NT, DT_UNIX, DT_NETAPP, DT_NETWARE, DT_BBWIN } dsystype;
+ 	char *eoln, *curline;
+ 	static int ptnsetup = 0;
+ 	static pcre *inclpattern = NULL;
+ 	static pcre *exclpattern = NULL;
+ 
++	if (strstr(msg, "netapp.pl")) return do_netapp_disk_rrd(hostname, testname, msg, tstamp);
++	if (strstr(msg, "dbcheck.pl")) return do_dbcheck_tablespace_rrd(hostname, testname, msg, tstamp);
++
+ 	if (disk_tpl == NULL) disk_tpl = setup_template(disk_params);
+ 
+ 	if (!ptnsetup) {
+ 		const char *errmsg;
+ 		int errofs;
+@@ -50,60 +53,37 @@
+ 
+ 	if (strstr(msg, " xfs ") || strstr(msg, " efs ") || strstr(msg, " cxfs ")) dsystype = DT_IRIX;
+ 	else if (strstr(msg, "DASD")) dsystype = DT_AS400;
+ 	else if (strstr(msg, "NetWare Volumes")) dsystype = DT_NETWARE;
+ 	else if (strstr(msg, "NetAPP")) dsystype = DT_NETAPP;
+-	else if (strstr(msg, "netapp.pl")) dsystype = DT_NETAPP2;
+-	else if (strstr(msg, "dbcheck.pl")) dsystype = DT_DBCHECK;
+ 	else if (strstr(msg, "Summary")) dsystype = DT_BBWIN; /* Make sure it is a bbwin client v > 0.10 */
+ 	else if (strstr(msg, "Filesystem")) dsystype = DT_NT;
+ 	else dsystype = DT_UNIX;
+ 
+-	curline = msg;
+-
+-	switch (dsystype) {
+-	  case DT_NETAPP2:
+-		curline = strchr(curline, '\n'); if (curline) curline++;
+-		break;
+-	  case DT_DBCHECK:
+-		curline = strchr(curline, '\n'); if (curline) curline++;
+-		curline=strstr(curline, "TableSpace/DBSpace");
+-		if (curline) {
+-			eoln = strchr(curline, '\n');
+-			curline = (eoln ? (eoln+1) : NULL);
+-		}
+-		break;
+-	  default:
+-		break;
+-	}
+-
++        /*
++         * Francesco Duranti noticed that if we use the "/group" option
++         * when sending the status message, this tricks the parser to
++         * create an extra filesystem called "/group". So skip the first
++         * line - we never have any disk reports there anyway.
++         */
++        curline = strchr(msg, '\n'); if (curline) curline++;
+ 	while (curline)  {
+ 		char *fsline, *p;
+ 		char *columns[20];
+ 		int columncount;
+ 		char *diskname = NULL;
+ 		int pused = -1;
+ 		int wanteddisk = 1;
+ 		long long aused = 0;
+-		/* FD: Using double instead of long long because we can have decimal on Netapp and DbCheck */
+-		double dused = 0;
+-		/* FD: used to add a column if the filesystem is named "snap reserve" for netapp.pl */
+-		int snapreserve=0;
+ 
+ 		eoln = strchr(curline, '\n'); if (eoln) *eoln = '\0';
+ 
+ 		/* AS/400 reports must contain the word DASD */
+ 		if ((dsystype == DT_AS400) && (strstr(curline, "DASD") == NULL)) goto nextline;
+ 
+-		/* FD: Exit if doing DBCHECK and the end of the tablespaces are reached */
+-		if ((dsystype == DT_DBCHECK) && (strstr(eoln+1, "dbcheck.pl") == (eoln+1))) break;
+-
+-		/* FD: netapp.pl snapshot line that start with "snap reserve" need a +1 */
+-		if ((dsystype == DT_NETAPP2) && (strstr(curline, "snap reserve"))) snapreserve=1;
+-
+-		/* All clients except AS/400 and DBCHECK report the mount-point with slashes - ALSO Win32 clients. */
+-		if ((dsystype != DT_AS400) && (dsystype != DT_DBCHECK) && (strchr(curline, '/') == NULL)) goto nextline;
++		/* All clients except AS/400 report the mount-point with slashes - ALSO Win32 clients. */
++		if ((dsystype != DT_AS400) && (strchr(curline, '/') == NULL)) goto nextline;
+ 
+ 		/* red/yellow filesystems show up twice */
+ 		if ((dsystype != DT_NETAPP) && (dsystype != DT_NETWARE) && (dsystype != DT_AS400)) {
+ 			if (*curline == '&') goto nextline; 
+ 			if ((strstr(curline, " red ") || strstr(curline, " yellow "))) goto nextline;
+@@ -154,60 +134,10 @@
+ 			sprintf(diskname, "/%s", columns[0]);
+ 			p = strchr(columns[4], '%'); if (p) *p = ' ';
+ 			pused = atoi(columns[4]);
+ 			aused = atoi(columns[2]);
+ 			break;
+-
+-		  /* FD: Check TableSpace from dbcheck.pl */
+-		  case DT_DBCHECK:
+-			/* FD: Add an initial "/" to TblSpace Name so they're reported in the trends column */
+-			diskname=xmalloc(strlen(columns[0])+2);
+-			sprintf(diskname,"/%s",columns[0]);
+-			p = strchr(columns[4], '%'); if (p) *p = ' ';
+-			pused = atoi(columns[4]);
+-			p = columns[2] + strspn(columns[2], "0123456789.");
+-			/* FD: Using double instead of long long because we can have decimal */
+-			dused = str2ll(columns[2], NULL);
+-			/* FD: dbspace report contains M/G/T 
+-			   Convert to KB if there's a modifier after the numbers
+-			*/
+-			if (*p == 'M') dused *= 1024;
+-			else if (*p == 'G') dused *= (1024*1024);
+-			else if (*p == 'T') dused *= (1024*1024*1024);
+-			aused=(long long)dused;
+-			break;
+-		  /* FD: Check diskspace from netapp.pl */
+-		  case DT_NETAPP2:
+-			/* FD: Name column can contain "spaces" so it could be split in multiple
+-			   columns, create a unique string from columns[5] that point to the
+-			   complete disk name 
+-			*/
+-			while (columncount-- > 6+snapreserve) { 
+-				p = strchr(columns[columncount-1],0); 
+-				if (p) *p = '_'; 
+-			}
+-			/* FD: Add an initial "/" to qtree and quotas */
+-			if (*columns[5+snapreserve] != '/') {
+-				diskname=xmalloc(strlen(columns[5+snapreserve])+2);
+-				sprintf(diskname,"/%s",columns[5+snapreserve]);
+-			} else {
+-				diskname = xstrdup(columns[5+snapreserve]);
+-			}
+-			p = strchr(columns[4+snapreserve], '%'); if (p) *p = ' ';
+-			pused = atoi(columns[4+snapreserve]);
+-			p = columns[2+snapreserve] + strspn(columns[2+snapreserve], "0123456789.");
+-			/* Using double instead of long long because we can have decimal */
+-			dused = str2ll(columns[2+snapreserve], NULL);
+-			/* snapshot and qtree contains M/G/T 
+-			   Convert to KB if there's a modifier after the numbers
+-			*/
+-			if (*p == 'M') dused *= 1024;
+-			else if (*p == 'G') dused *= (1024*1024);
+-			else if (*p == 'T') dused *= (1024*1024*1024);
+-			aused=(long long) dused;
+-			break;
+-
+ 		  case DT_UNIX:
+ 			diskname = xstrdup(columns[5]);
+ 			p = strchr(columns[4], '%'); if (p) *p = ' ';
+ 			pused = atoi(columns[4]);
+ 			aused = atoi(columns[2]);
+diff --exclude=.svn -r -U5 -N xymon-4.2.3/hobbitd/rrd/do_netapp.c xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_netapp.c
+--- xymon-4.2.3/hobbitd/rrd/do_netapp.c	2009-06-27 13:35:39.000000000 +0200
++++ xymon-4.2.3-hobbitpatch/hobbitd/rrd/do_netapp.c	2009-06-30 01:15:52.000000000 +0200
+@@ -22,16 +22,13 @@
+                                      "DS:FCPin:GAUGE:600:0:U",
+                                      "DS:FCPout:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *netapp_stats_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	unsigned long netread=0, netwrite=0, diskread=0, diskwrite=0, taperead=0, tapewrite=0, fcpin=0, fcpout=0;
+-	time_t now = time(NULL);
+ 	dbgprintf("netapp: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "netapp.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (netapp_stats_tpl == NULL) netapp_stats_tpl = setup_template(netapp_stats_params);
+ 		netread=get_kb_data(msg, "NET_read");
+ 		netwrite=get_kb_data(msg,"NET_write");
+@@ -70,16 +67,13 @@
+                                      "DS:ChangeNotifies:GAUGE:600:0:U",
+                                      "DS:sessionsusingsecuri:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *netapp_cifs_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	unsigned long sess=0, share=0, file=0, lock=0, cred=0, dir=0, change=0, secsess=0;
+-	time_t now = time(NULL);
+ 	dbgprintf("netapp: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "netapp.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (netapp_cifs_tpl == NULL) netapp_cifs_tpl = setup_template(netapp_cifs_params);
+ 		sess=get_long_data(msg, "sessions");
+ 		share=get_long_data(msg,"open_shares");
+@@ -115,16 +109,13 @@
+                                      "DS:FCPops:GAUGE:600:0:U",
+                                      "DS:Totalops:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *netapp_ops_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+ 	unsigned long nfsops=0, cifsops=0, httpops=0, iscsiops=0, fcpops=0, totalops=0;
+-	time_t now = time(NULL);
+ 	dbgprintf("netapp: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "netapp.pl")) {
+ 		sprintf(rrdfn, "%s.rrd",testname);
+ 		if (netapp_ops_tpl == NULL) netapp_ops_tpl = setup_template(netapp_ops_params);
+ 		nfsops=get_long_data(msg, "NFS_ops");
+ 		cifsops=get_long_data(msg,"CIFS_ops");
+@@ -151,15 +142,12 @@
+                                      "DS:size:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *netapp_snapmirror_tpl      = NULL;
+ 
+         char *eoln, *curline, *start, *end;
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	dbgprintf("netapp: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "netapp.pl")) {
+ 		if (netapp_snapmirror_tpl == NULL) netapp_snapmirror_tpl = setup_template(netapp_snapmirror_params);
+                 if ((start=strstr(msg, "<!--"))==NULL) return 0;
+                 if ((end=strstr(start,"-->"))==NULL) return 0;
+                 *end='\0';
+@@ -198,15 +186,12 @@
+                                      "DS:oldsize:GAUGE:600:0:U",
+                                      rra1, rra2, rra3, rra4, NULL };
+ static char *netapp_snaplist_tpl      = NULL;
+ 
+         char *eoln, *curline, *start, *end;
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	dbgprintf("netapp: host %s test %s\n",hostname, testname);
+ 	
+-	if (starttime == 0) starttime = now;
+ 	if (strstr(msg, "netapp.pl")) {
+ 		if (netapp_snaplist_tpl == NULL) netapp_snaplist_tpl = setup_template(netapp_snaplist_params);
+                 if ((start=strstr(msg, "<!--"))==NULL) return 0;
+                 if ((end=strstr(start,"-->"))==NULL) return 0;
+                 *end='\0';
+@@ -247,20 +232,18 @@
+ 
+ int do_netapp_extratest_rrd(char *hostname, char *testname, char *msg, time_t tstamp, char *params[],char *varlist[])
+ {
+ static char *netapp_tpl      = NULL;
+ 
+-	static time_t starttime = 0;
+-	time_t now = time(NULL);
+ 	char *outp;	
+ 	char *eoln,*curline;
+ 	char *rrdp;
+-	if (starttime == 0) starttime = now;
+ 	/* Setup the update string */
+ 
+ 	netapp_tpl = setup_template(params);
+         curline = msg;
++
+ 	dbgprintf("MESSAGE=%s\n",msg);
+         rrdp = rrdvalues + sprintf(rrdvalues, "%d", (int)tstamp);
+         while (curline && (*curline))  {
+ 		char *fsline, *p, *sep, *fname=NULL;
+ 		char *columns[30];
+@@ -268,11 +251,14 @@
+ 		char *volname = NULL;
+ 		int i,flag,l,first,totnum;
+ 		char *val;
+ 		outp=rrdp;	
+ 		eoln = strchr(curline, '\n'); if (eoln) *eoln = '\0';
+-
++		if ((eoln == curline) || (strstr(curline,"netapp.pl"))) {
++			dbgprintf("SKIP LINE=\n",curline);
++			goto nextline;
++		}
+ 		fsline = xstrdup(curline); 
+ 		dbgprintf("LINE=%s\n",fsline);
+ 		
+ 		for (columncount=0; (columncount<30); columncount++) columns[columncount] = NULL;
+ 		for (totnum=0; varlist[totnum]; totnum++) ;
+@@ -326,10 +312,11 @@
+ 
+ 		if (volname) { xfree(volname); volname = NULL; }
+ 
+ 		if (eoln) *eoln = '\n';
+ 		xfree(fsline);
++nextline:
+ 		curline = (eoln ? (eoln+1) : NULL);
+ 	}
+ 	return 0;
+ 
+ }
+@@ -496,5 +483,163 @@
+ 	do_netapp_extratest_rrd(hostname,"xstatdisk",diskstr,tstamp,netapp_disk_params,disk_test);
+ 
+ 	return 0;
+ }
+ 
++
++int do_netapp_disk_rrd(char *hostname, char *testname, char *msg, time_t tstamp)
++{
++       static char *netapp_disk_params[] = { "rrdcreate", rrdfn, "DS:pct:GAUGE:600:0:U", "DS:used:GAUGE:600:0:U", rra1, rra2, rra3, rra4, NULL };
++       static char *netapp_disk_tpl      = NULL;
++
++       char *eoln, *curline;
++       static int ptnsetup = 0;
++       static pcre *inclpattern = NULL;
++       static pcre *exclpattern = NULL;
++       static int newdfreport=0;
++
++	if (strstr(msg,"netappnewdf")) newdfreport=1;
++
++       if (netapp_disk_tpl == NULL) netapp_disk_tpl = setup_template(netapp_disk_params);
++
++       if (!ptnsetup) {
++               const char *errmsg;
++               int errofs;
++               char *ptn;
++
++               ptnsetup = 1;
++               ptn = getenv("RRDDISKS");
++               if (ptn && strlen(ptn)) {
++                       inclpattern = pcre_compile(ptn, PCRE_CASELESS, &errmsg, &errofs, NULL);
++                       if (!inclpattern) errprintf("PCRE compile of RRDDISKS='%s' failed, error %s, offset %d\n",
++                                                   ptn, errmsg, errofs);
++               }
++               ptn = getenv("NORRDDISKS");
++               if (ptn && strlen(ptn)) {
++                       exclpattern = pcre_compile(ptn, PCRE_CASELESS, &errmsg, &errofs, NULL);
++                       if (!exclpattern) errprintf("PCRE compile of NORRDDISKS='%s' failed, error %s, offset %d\n",
++                                                   ptn, errmsg, errofs);
++               }
++       }
++
++       /*
++        * Francesco Duranti noticed that if we use the "/group" option
++        * when sending the status message, this tricks the parser to
++        * create an extra filesystem called "/group". So skip the first
++        * line - we never have any disk reports there anyway.
++        */
++       curline = strchr(msg, '\n'); if (curline) curline++;
++
++       while (curline)  {
++               char *fsline, *p;
++               char *columns[20];
++               int columncount;
++               char *diskname = NULL;
++               int pused = -1;
++               int wanteddisk = 1;
++               long long aused = 0;
++               /* FD: Using double instead of long long because we can have decimal on Netapp and DbCheck */
++               double dused = 0;
++               /* FD: used to add a column if the filesystem is named "snap reserve" for netapp.pl */
++               int snapreserve=0;
++
++               eoln = strchr(curline, '\n'); if (eoln) *eoln = '\0';
++
++
++               /* FD: netapp.pl snapshot line that start with "snap reserve" need a +1 */
++               if (strstr(curline, "snap reserve")) snapreserve=1;
++
++               /* All clients except AS/400 and DBCHECK report the mount-point with slashes - ALSO Win32 clients. */
++               if (strchr(curline, '/') == NULL) goto nextline;
++
++               /* red/yellow filesystems show up twice */
++               if (*curline == '&') goto nextline;
++               if ((strstr(curline, " red ") || strstr(curline, " yellow "))) goto nextline;
++
++               for (columncount=0; (columncount<20); columncount++) columns[columncount] = "";
++               fsline = xstrdup(curline); columncount = 0; p = strtok(fsline, " ");
++               while (p && (columncount < 20)) { columns[columncount++] = p; p = strtok(NULL, " "); }
++
++               /* FD: Name column can contain "spaces" so it could be split in multiple
++                  columns, create a unique string from columns[5] that point to the
++                  complete disk name
++               */
++               while (columncount-- > 6+snapreserve) {
++                       p = strchr(columns[columncount-1],0);
++                       if (p) *p = '_';
++               }
++               /* FD: Add an initial "/" to qtree and quotas */
++	       if (newdfreport == 1) {
++			diskname = xstrdup(columns[0]);
++		} else if (*columns[5+snapreserve] != '/') {
++                       diskname=xmalloc(strlen(columns[5+snapreserve])+2);
++                       sprintf(diskname,"/%s",columns[5+snapreserve]);
++               } else {
++                       diskname = xstrdup(columns[5+snapreserve]);
++               }
++               p = strchr(columns[4+snapreserve], '%'); if (p) *p = ' ';
++               pused = atoi(columns[4+snapreserve]);
++               p = columns[2+snapreserve] + strspn(columns[2+snapreserve], "0123456789.");
++               /* Using double instead of long long because we can have decimal */
++               dused = str2ll(columns[2+snapreserve], NULL);
++               /* snapshot and qtree contains M/G/T
++                  Convert to KB if there's a modifier after the numbers
++               */
++               if (*p == 'M') dused *= 1024;
++               else if (*p == 'G') dused *= (1024*1024);
++               else if (*p == 'T') dused *= (1024*1024*1024);
++               aused=(long long) dused;
++
++
++               /* Check include/exclude patterns */
++               wanteddisk = 1;
++               if (exclpattern) {
++                       int ovector[30];
++                       int result;
++
++                       result = pcre_exec(exclpattern, NULL, diskname, strlen(diskname),
++                                          0, 0, ovector, (sizeof(ovector)/sizeof(int)));
++
++                       wanteddisk = (result < 0);
++               }
++               if (wanteddisk && inclpattern) {
++                       int ovector[30];
++                       int result;
++
++                       result = pcre_exec(inclpattern, NULL, diskname, strlen(diskname),
++                                          0, 0, ovector, (sizeof(ovector)/sizeof(int)));
++
++                       wanteddisk = (result >= 0);
++               }
++
++               if (wanteddisk && diskname && (pused != -1)) {
++                       p = diskname; while ((p = strchr(p, '/')) != NULL) { *p = ','; }
++                       if (strcmp(diskname, ",") == 0) {
++                               diskname = xrealloc(diskname, 6);
++                               strcpy(diskname, ",root");
++                       }
++
++                       /*
++                        * Use testname here.
++                        * The disk-handler also gets data from NetAPP inode- and qtree-messages,
++                        * that are virtually identical to the disk-messages. So lets just handle
++                        * all of it by using the testname as part of the filename.
++                        */
++                        snprintf(rrdfn, sizeof(rrdfn)-1, "%s%s.rrd", testname, diskname);
++                        rrdfn[sizeof(rrdfn)-1] = '\0';
++                        sprintf(rrdvalues, "%d:%d:%lld", (int)tstamp, pused, aused);
++                        create_and_update_rrd(hostname, rrdfn, netapp_disk_params, netapp_disk_tpl);
++
++               }
++               if (diskname) { xfree(diskname); diskname = NULL; }
++
++               if (eoln) *eoln = '\n';
++               xfree(fsline);
++
++nextline:
++               curline = (eoln ? (eoln+1) : NULL);
++       }
++
++       return 0;
++}
++
++

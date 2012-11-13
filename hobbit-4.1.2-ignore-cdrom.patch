@@ -1,0 +1,10 @@
+--- hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-clients.cfg~	2005-08-24 07:43:34.000000000 +0200
++++ hobbit-4.1.2p1/hobbitd/etcfiles/hobbit-clients.cfg	2005-12-13 16:00:50.000000000 +0100
+@@ -143,6 +143,7 @@
+ 	# These are the built-in defaults.
+ 	UP      1h
+ 	LOAD    5.0 10.0
++	DISK    %^/mnt/cdrom 101 101
+ 	DISK    * 90 95
+ 	MEMPHYS 100 101
+ 	MEMSWAP 50 80
