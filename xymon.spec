@@ -11,7 +11,7 @@ Name: xymon
 Version: 4.2.3
 Release: %release
 Group: Networking/Other
-URL: http://hobbitmon.sourceforge.net/
+URL: https://hobbitmon.sourceforge.net/
 License: GPL
 Source: http://downloads.sourceforge.net/hobbitmon/%{name}-%{version}%{?beta:-RC-%beta}.tar.gz
 Patch:	hobbit-4.1.2-ignore-cdrom.patch
